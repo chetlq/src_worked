@@ -1,52 +1,102 @@
 'use strict';
+var Alexa = require("alexa-sdk");
 var axios = require('axios');
+exports.handler = function(event, context, callback) {
+    var alexa = Alexa.handler(event, context);
+    alexa.registerHandlers(handlers);
+    alexa.execute();
+};
+var days = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+    'today',
+    'yesterday',
+    'this week',
+    'last week',
+    'this month'
+  ]
+var handlers = {
+    'LaunchRequest': function () {
+        this.emit('SayHello');
+    },
+    'HelloWorldIntent': function () {
+        this.emit('SayHello');
+    },
+    SayHello :function () {
+        this.emit(':tell', 'Hello World!');
+    },
+    travelintent :function () {
+      var self = this;
+      var tt = this.event.request.intent.slots.slotDay.value;
+      if (tt === undefined){
+              this.emit(':ask', typeof(tt),typeof(tt));
+      }else{
+        if (days.includes(tt.toLowerCase())){
+//self.emit(':tell', "Transfer was successful. Goodbye!");
 
-foo2("monday")
-.then(function(res){
-  var self = this;
-        if(res.status == 200) {
-          //   "alexa-sdk": "^1.0.7",
-          //var str = '';
-          // JSON.parse(res.date, function(key, value) {
-          //
-          //   var str = value;
-          //   return value;
-          // });
 
-        //  alert( event.date.getDate() ); // теперь сработает!
-//         var str = '["2017-06-19T00:00:00.000Z",  "2017-06-20T00:00:00.000Z"]';
+          foo2(tt)
+          .then(function(res){
+                  if(res.status == 200) {
+                    //var str = '';
+                    // JSON.parse(res.date, function(key, value) {
+                    //
+                    //   var str = value;
+                    //   return value;
+                    // });
+
+                  //  alert( event.date.getDate() ); // теперь сработает!
+                  //var arr = JSON.parse(res.data, function(key, value) {return value;});
+                  // console.log(arr[0]);
+                    self.emit(':tell', "123");
+
+
+                  }
+                  else
+                  {
+                    self.emit(':tell', "Transfer was unsuccessful");
+
+                  }
+                })
+                .catch(function(e) {
+            // Функция не перевыбросила исключение 'e'
+            // в результате произойдёт resolve(undefined)
+            // для Promise, возвращённого функцией catch
+
+          });
+
+
+
+    }else{
+
+      this.emit(':ask', 123,123);
+    }
+
+      }
+
+// if (guessNum === undefined){
+//         this.emit(':ask', typeof(guessNum),typeof(guessNum));
+// }else{
+// this.emit(':ask', guessNum,guessNum);
 //
-//         JSON.parse(str, function(k, v) {
-//   console.log(k); // пишем имя текущего свойства, последним именем будет ""
-//   return v;       // возвращаем неизменённое значение свойства
-// });
-console.log(res.data.length);
-var menu = res.data;
-for (var key in menu) {
-  // этот код будет вызван для каждого свойства объекта
-  // ..и выведет имя свойства и его значение
+// }
 
-  console.log( "Ключ: " + key + " значение: " + menu[key] );
-}
-        //console.log( res.headers.toString());
+    }
+};
 
+var foo =function (myname,amount) {
+return axios.post('https://sbertech.herokuapp.com/transfers', { nick: myname ,transfer_amount: amount } )
+            .then( function (response){return response.status;} );
+};
 
-        }
-        else
-        {
-          console.log("321")
-
-        }
-      })
-      .catch(function(e) {
-  // Функция не перевыбросила исключение 'e'
-  // в результате произойдёт resolve(undefined)
-  // для Promise, возвращённого функцией catch
-
-});
 
  function foo2(name) {
-return axios.get('https://thawing-mesa-47033.herokuapp.com/days/'+name.toLowerCase())
+return axios.get('https://thawing-mesa-47033.herokuapp.com/days/monday')//+name.toLowerCase())
             .then( function (response){
               if(response.data===null) {return 400;}
               else {

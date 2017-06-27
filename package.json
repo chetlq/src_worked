@@ -4,9 +4,15 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "alexa-sdk": "^1.0.7",
+    "axios": "^0.16.0",
+    "libxmljs": "^0.18.4",
+    "cookies": "^0.7.0",
+    "@3846masa/axios-cookiejar-support": "^0.0.4",
+    "iconv": "^2.3.0"
 
-  "axios": "^0.15.3"
-},
+
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
